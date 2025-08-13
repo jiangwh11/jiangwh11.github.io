@@ -3,159 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暑假L4 - 文件列表</title>
+    <title>暑假笔记 - 文件列表</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         body {
-            font-family: Arial, sans-serif;
+            background-color: #f0f7ff;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
         }
+        
         .header {
-            margin-bottom: 30px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #ddd;
+            margin: 30px 0;
         }
+        
         .back-link {
-            color: #4285f4;
-            text-decoration: none;
-            font-size: 16px;
             display: inline-flex;
             align-items: center;
+            color: #2c6ecb;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-bottom: 20px;
         }
+        
         .back-link:hover {
             text-decoration: underline;
         }
-        .back-link svg {
-            margin-right: 5px;
+        
+        .back-link i {
+            margin-right: 8px;
         }
-        .file-list {
+        
+        h1 {
+            color: #2c6ecb;
+            margin-bottom: 10px;
+        }
+        
+        .file-list-container {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
-        .file-item {
-            padding: 15px 10px;
+        
+        .file-list-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
+            padding: 15px 20px;
+            background-color: #f8f9fa;
             border-bottom: 1px solid #eee;
-            display: flex;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .file-list {
+            list-style: none;
+        }
+        
+        .file-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr;
             align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
             transition: background-color 0.2s ease;
         }
+        
         .file-item:hover {
             background-color: #f9f9f9;
         }
-        .file-item:last-child {
-            border-bottom: none;
-        }
-        .file-icon {
-            font-size: 28px;
-            margin-right: 15px;
-            min-width: 30px;
-            text-align: center;
-        }
+        
         .file-info {
-            flex-grow: 1;
+            display: flex;
+            align-items: center;
         }
+        
+        .file-icon {
+            font-size: 1.8rem;
+            margin-right: 15px;
+            color: #6c757d;
+        }
+        
         .file-name {
-            font-weight: 500;
-            margin-bottom: 3px;
+            font-size: 1.05rem;
         }
-        .file-size {
-            font-size: 13px;
-            color: #666;
+        
+        .file-actions {
+            text-align: right;
         }
+        
         .download-btn {
+            display: inline-flex;
+            align-items: center;
             padding: 8px 16px;
-            background-color: #34a853; /* 下载按钮绿色 */
+            background-color: #28a745;
             color: white;
             text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
-            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
+        
+        .download-btn i {
+            margin-right: 5px;
+        }
+        
         .download-btn:hover {
-            background-color: #2a8644;
+            background-color: #218838;
         }
+        
         .empty-state {
             text-align: center;
-            padding: 40px 0;
+            padding: 60px 20px;
             color: #666;
         }
-        .empty-state .icon {
-            font-size: 60px;
-            margin-bottom: 15px;
-            color: #ccc;
+        
+        .empty-state i {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #dee2e6;
         }
-        .footer {
+        
+        footer {
             text-align: center;
-            margin-top: 40px;
+            margin-top: 60px;
             color: #666;
-            font-size: 14px;
+            font-size: 0.9rem;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <a href="../index.html" class="back-link">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M19 12H5M5 12l7 7M5 12l7-7"></path>
-            </svg>
-            返回主页面
-        </a>
-        <h1>暑假L4 - 文件列表</h1>
-        <p>点击"下载"按钮获取文件</p>
-    </div>
-    
-    <div class="file-list">
-        <!-- 文件项示例，请根据你的实际文件修改 -->
-        <div class="file-item">
-            <span class="file-icon">📄</span>
-            <div class="file-info">
-                <div class="file-name">暑假作业要求.docx</div>
-                <div class="file-size">2.4 MB</div>
-            </div>
-            <a href="暑假作业要求.docx" class="download-btn">下载</a>
+    <div class="container">
+        <div class="header">
+            <a href="../index.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                返回主页
+            </a>
+            <h1>暑假笔记 - 文件列表</h1>
+            <p>点击"下载"按钮获取所需文件</p>
         </div>
         
-        <div class="file-item">
-            <span class="file-icon">📊</span>
-            <div class="file-info">
-                <div class="file-name">课程安排表.xlsx</div>
-                <div class="file-size">845 KB</div>
+        <div class="file-list-container">
+            <div class="file-list-header">
+                <div>文件名称</div>
+                <div>操作</div>
             </div>
-            <a href="课程安排表.xlsx" class="download-btn">下载</a>
+            
+            <ul class="file-list">
+                <!-- 文件项示例，请根据实际文件修改 -->
+                <li class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <div class="file-name">数学暑假笔记.docx</div>
+                    </div>
+                    <div class="file-actions">
+                        <a href="数学暑假笔记.docx" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                    </div>
+                </li>
+                
+                <li class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <div class="file-name">语文阅读理解技巧.pdf</div>
+                    </div>
+                    <div class="file-actions">
+                        <a href="语文阅读理解技巧.pdf" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                    </div>
+                </li>
+                
+                <li class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-excel"></i>
+                        </div>
+                        <div class="file-name">英语单词表.xlsx</div>
+                    </div>
+                    <div class="file-actions">
+                        <a href="英语单词表.xlsx" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                    </div>
+                </li>
+                
+                <li class="file-item">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-image"></i>
+                        </div>
+                        <div class="file-name">物理实验图解.png</div>
+                    </div>
+                    <div class="file-actions">
+                        <a href="物理实验图解.png" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            
+            <!-- 如果文件夹为空，显示以下内容（删除上面的file-list，取消下面注释） -->
+            <!-- <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>当前文件夹为空</h3>
+                <p>暂无可用文件，请稍后再来查看</p>
+            </div> -->
         </div>
         
-        <div class="file-item">
-            <span class="file-icon">📁</span>
-            <div class="file-info">
-                <div class="file-name">学习资料包.zip</div>
-                <div class="file-size">15.8 MB</div>
-            </div>
-            <a href="学习资料包.zip" class="download-btn">下载</a>
-        </div>
-        
-        <div class="file-item">
-            <span class="file-icon">🎥</span>
-            <div class="file-info">
-                <div class="file-name">教学视频.mp4</div>
-                <div class="file-size">78.2 MB</div>
-            </div>
-            <a href="教学视频.mp4" class="download-btn">下载</a>
-        </div>
-        
-        <!-- 如果没有文件，显示空状态（删除上面的文件项，取消下面的注释） -->
-        <!-- <div class="empty-state">
-            <div class="icon">📁</div>
-            <h3>文件夹为空</h3>
-            <p>暂无文件可显示</p>
-        </div> -->
-    </div>
-    
-    <div class="footer">
-        <p>© 2023 暑假L4文件分享 | 如有问题请联系管理员</p>
+        <footer>
+            <p>© 2023 暑假学习资料分享平台</p>
+        </footer>
     </div>
 </body>
 </html>
+    
