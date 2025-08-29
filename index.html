@@ -1,67 +1,156 @@
+html
+预览
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>暑假笔记 - 文件列表</title>
+    <title>暑假学习资料 - 主目录</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Microsoft YaHei', 'Segoe UI', sans-serif;
         }
         
         body {
-            background-color: #f0f7ff;
+            background-color: #f5f7fa;
             color: #333;
             line-height: 1.6;
+            padding: 20px 0;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
         }
         
-        .header {
-            margin: 30px 0;
+        /* 页面头部 */
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
         }
         
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: #2c6ecb;
-            text-decoration: none;
-            font-size: 1rem;
-            margin-bottom: 20px;
-        }
-        
-        .back-link:hover {
-            text-decoration: underline;
-        }
-        
-        .back-link i {
-            margin-right: 8px;
-        }
-        
-        h1 {
-            color: #2c6ecb;
+        .page-header h1 {
+            color: #2d55cc;
+            font-size: 2rem;
             margin-bottom: 10px;
         }
         
+        .page-header p {
+            color: #666;
+            font-size: 1.05rem;
+        }
+        
+        /* 文件夹样式 */
+        .folder-section {
+            display: flex;
+            justify-content: center;
+            margin: 50px 0;
+        }
+        
+        .folder-card {
+            width: 320px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .folder-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .folder-icon {
+            font-size: 5rem;
+            color: #ffc107; /* 文件夹黄色图标 */
+            margin-bottom: 20px;
+        }
+        
+        .folder-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .folder-desc {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        /* 文件列表页样式（点击文件夹后跳转的页面） */
+        .file-page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            color: #2d55cc;
+            text-decoration: none;
+            font-size: 1rem;
+            margin-right: 20px;
+        }
+        
+        .back-btn i {
+            margin-right: 8px;
+        }
+        
+        .file-page-title {
+            color: #2d55cc;
+            font-size: 1.8rem;
+        }
+        
+        /* 上传按钮 */
+        .upload-section {
+            margin-bottom: 25px;
+            text-align: right;
+        }
+        
+        .upload-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 18px;
+            background-color: #2d55cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .upload-btn i {
+            margin-right: 8px;
+        }
+        
+        .upload-btn:hover {
+            background-color: #1e42a3;
+        }
+        
+        /* 文件列表容器 */
         .file-list-container {
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 15px rgba(0,0,0,0.05);
             overflow: hidden;
+            margin-bottom: 40px;
         }
         
         .file-list-header {
             display: grid;
-            grid-template-columns: 3fr 1fr;
-            padding: 15px 20px;
+            grid-template-columns: 4fr 1fr 1fr; /* 文件名、大小、操作 */
+            padding: 16px 25px;
             background-color: #f8f9fa;
             border-bottom: 1px solid #eee;
             font-weight: 600;
@@ -74,15 +163,15 @@
         
         .file-item {
             display: grid;
-            grid-template-columns: 3fr 1fr;
+            grid-template-columns: 4fr 1fr 1fr;
             align-items: center;
-            padding: 15px 20px;
+            padding: 16px 25px;
             border-bottom: 1px solid #eee;
             transition: background-color 0.2s ease;
         }
         
         .file-item:hover {
-            background-color: #f9f9f9;
+            background-color: #f9fafb;
         }
         
         .file-info {
@@ -90,14 +179,27 @@
             align-items: center;
         }
         
-        .file-icon {
-            font-size: 1.8rem;
+        .file-type-icon {
+            font-size: 1.6rem;
             margin-right: 15px;
             color: #6c757d;
         }
         
+        /* 不同文件类型的图标颜色 */
+        .file-type-icon.word { color: #2b579a; }    /* Word文档 */
+        .file-type-icon.pdf { color: #d32f2f; }     /* PDF */
+        .file-type-icon.excel { color: #217346; }   /* Excel */
+        .file-type-icon.image { color: #f57c00; }   /* 图片 */
+        .file-type-icon.txt { color: #666; }        /* 文本文件 */
+        
         .file-name {
             font-size: 1.05rem;
+            color: #333;
+        }
+        
+        .file-size {
+            color: #666;
+            font-size: 0.95rem;
         }
         
         .file-actions {
@@ -107,13 +209,13 @@
         .download-btn {
             display: inline-flex;
             align-items: center;
-            padding: 8px 16px;
+            padding: 8px 14px;
             background-color: #28a745;
             color: white;
             text-decoration: none;
             border-radius: 5px;
             font-size: 0.9rem;
-            transition: all 0.2s ease;
+            transition: background-color 0.2s ease;
         }
         
         .download-btn i {
@@ -124,120 +226,260 @@
             background-color: #218838;
         }
         
-        .empty-state {
+        /* 空文件夹状态 */
+        .empty-folder {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 20px;
             color: #666;
         }
         
-        .empty-state i {
+        .empty-folder i {
             font-size: 5rem;
             margin-bottom: 20px;
             color: #dee2e6;
         }
         
+        .empty-folder h3 {
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+        }
+        
+        .empty-folder p {
+            font-size: 0.95rem;
+        }
+        
+        /* 页脚 */
         footer {
             text-align: center;
-            margin-top: 60px;
             color: #666;
             font-size: 0.9rem;
             padding: 20px 0;
             border-top: 1px solid #eee;
+            margin-top: 50px;
+        }
+
+        /* 响应式适配（手机端） */
+        @media (max-width: 768px) {
+            .file-list-header {
+                grid-template-columns: 3fr 1fr 1fr;
+                padding: 14px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .file-item {
+                grid-template-columns: 3fr 1fr 1fr;
+                padding: 14px 18px;
+            }
+            
+            .file-type-icon {
+                font-size: 1.4rem;
+                margin-right: 12px;
+            }
+            
+            .file-name {
+                font-size: 0.95rem;
+            }
+            
+            .file-size {
+                font-size: 0.85rem;
+            }
+            
+            .download-btn {
+                padding: 6px 12px;
+                font-size: 0.85rem;
+            }
+            
+            .folder-card {
+                width: 280px;
+                padding: 25px 15px;
+            }
+            
+            .folder-icon {
+                font-size: 4.5rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="../index.html" class="back-link">
-                <i class="fas fa-arrow-left"></i>
-                返回主页
-            </a>
-            <h1>暑假笔记 - 文件列表</h1>
-            <p>点击"下载"按钮获取所需文件</p>
+    <!-- 1. 主目录页面（初始展示「L4暑假内容」文件夹） -->
+    <div class="container" id="home-page">
+        <div class="page-header">
+            <h1>暑假学习资料中心</h1>
+            <p>点击文件夹查看/下载相关内容</p>
         </div>
-        
+
+        <!-- 「L4暑假内容」文件夹卡片 -->
+        <div class="folder-section">
+            <div class="folder-card" onclick="window.location.href='#file-page'">
+                <div class="folder-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                <div class="folder-name">L4暑假内容</div>
+                <div class="folder-desc">包含L4年级暑假学习资料、笔记、习题等</div>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 暑假学习资料平台 | 所有文件仅供学习使用</p>
+        </footer>
+    </div>
+
+    <!-- 2. 「L4暑假内容」文件列表页（点击文件夹后跳转） -->
+    <div class="container" id="file-page" style="display: none;">
+        <div class="file-page-header">
+            <a href="#home-page" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                返回主目录
+            </a>
+            <h2 class="file-page-title">L4暑假内容</h2>
+        </div>
+
+        <!-- 上传按钮（仅管理员/上传者可见，可根据实际需求控制显示） -->
+        <div class="upload-section">
+            <label for="file-upload" class="upload-btn">
+                <i class="fas fa-upload"></i>
+                上传文件
+            </label>
+            <input type="file" id="file-upload" style="display: none;" multiple accept=".doc,.docx,.pdf,.xlsx,.xls,.png,.jpg,.jpeg,.txt">
+        </div>
+
+        <!-- 文件列表容器 -->
         <div class="file-list-container">
             <div class="file-list-header">
                 <div>文件名称</div>
+                <div>文件大小</div>
                 <div>操作</div>
             </div>
-            
+
             <ul class="file-list">
-                <!-- 文件项示例，请根据实际文件修改 -->
+                <!-- 文件1：Word笔记 -->
                 <li class="file-item">
                     <div class="file-info">
-                        <div class="file-icon">
+                        <div class="file-type-icon word">
                             <i class="fas fa-file-word"></i>
                         </div>
-                        <div class="file-name">数学暑假笔记.docx</div>
+                        <div class="file-name">L4数学暑假笔记（全章节）.docx</div>
                     </div>
+                    <div class="file-size">2.4MB</div>
                     <div class="file-actions">
-                        <a href="数学暑假笔记.docx" class="download-btn">
+                        <a href="files/L4数学暑假笔记（全章节）.docx" class="download-btn" download>
                             <i class="fas fa-download"></i>
                             下载
                         </a>
                     </div>
                 </li>
-                
+
+                <!-- 文件2：PDF习题 -->
                 <li class="file-item">
                     <div class="file-info">
-                        <div class="file-icon">
+                        <div class="file-type-icon pdf">
                             <i class="fas fa-file-pdf"></i>
                         </div>
-                        <div class="file-name">语文阅读理解技巧.pdf</div>
+                        <div class="file-name">L4语文暑假阅读理解专项练习.pdf</div>
                     </div>
+                    <div class="file-size">3.8MB</div>
                     <div class="file-actions">
-                        <a href="语文阅读理解技巧.pdf" class="download-btn">
+                        <a href="files/L4语文暑假阅读理解专项练习.pdf" class="download-btn" download>
                             <i class="fas fa-download"></i>
                             下载
                         </a>
                     </div>
                 </li>
-                
+
+                <!-- 文件3：Excel表格 -->
                 <li class="file-item">
                     <div class="file-info">
-                        <div class="file-icon">
+                        <div class="file-type-icon excel">
                             <i class="fas fa-file-excel"></i>
                         </div>
-                        <div class="file-name">英语单词表.xlsx</div>
+                        <div class="file-name">L4英语暑假单词默写表（含答案）.xlsx</div>
                     </div>
+                    <div class="file-size">1.2MB</div>
                     <div class="file-actions">
-                        <a href="英语单词表.xlsx" class="download-btn">
+                        <a href="files/L4英语暑假单词默写表（含答案）.xlsx" class="download-btn" download>
                             <i class="fas fa-download"></i>
                             下载
                         </a>
                     </div>
                 </li>
-                
+
+                <!-- 文件4：图片 -->
                 <li class="file-item">
                     <div class="file-info">
-                        <div class="file-icon">
+                        <div class="file-type-icon image">
                             <i class="fas fa-file-image"></i>
                         </div>
-                        <div class="file-name">物理实验图解.png</div>
+                        <div class="file-name">L4物理暑假实验操作步骤图.jpg</div>
                     </div>
+                    <div class="file-size">5.6MB</div>
                     <div class="file-actions">
-                        <a href="物理实验图解.png" class="download-btn">
+                        <a href="files/L4物理暑假实验操作步骤图.jpg" class="download-btn" download>
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                    </div>
+                </li>
+
+                <!-- 文件5：文本文件 -->
+                <li class="file-item">
+                    <div class="file-info">
+                        <div class="file-type-icon txt">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="file-name">L4暑假学习计划安排.txt</div>
+                    </div>
+                    <div class="file-size">0.3MB</div>
+                    <div class="file-actions">
+                        <a href="files/L4暑假学习计划安排.txt" class="download-btn" download>
                             <i class="fas fa-download"></i>
                             下载
                         </a>
                     </div>
                 </li>
             </ul>
-            
-            <!-- 如果文件夹为空，显示以下内容（删除上面的file-list，取消下面注释） -->
-            <!-- <div class="empty-state">
+
+            <!-- 若文件夹为空，替换上面的file-list为以下内容 -->
+            <!-- <div class="empty-folder">
                 <i class="fas fa-folder-open"></i>
-                <h3>当前文件夹为空</h3>
-                <p>暂无可用文件，请稍后再来查看</p>
+                <h3>当前文件夹暂无文件</h3>
+                <p>点击"上传文件"添加L4暑假相关学习资料</p>
             </div> -->
         </div>
-        
+
         <footer>
-            <p>© 2023 暑假学习资料分享平台</p>
+            <p>© 2024 暑假学习资料平台 | 所有文件仅供学习使用</p>
         </footer>
     </div>
-</body>
-</html>
-    
+
+    <script>
+        // 页面跳转逻辑（点击文件夹切换页面）
+        document.addEventListener('DOMContentLoaded', function() {
+            // 监听URL哈希变化，切换页面显示
+            window.addEventListener('hashchange', function() {
+                const hash = window.location.hash;
+                if (hash === '#file-page') {
+                    document.getElementById('home-page').style.display = 'none';
+                    document.getElementById('file-page').style.display = 'block';
+                } else {
+                    document.getElementById('file-page').style.display = 'none';
+                    document.getElementById('home-page').style.display = 'block';
+                }
+            });
+
+            // 上传文件预览（可选功能，仅前端预览，实际需后端支持）
+            const fileInput = document.getElementById('file-upload');
+            const fileList = document.querySelector('.file-list');
+            
+            fileInput.addEventListener('change', function(e) {
+                const files = e.target.files;
+                if (files.length === 0) return;
+
+                // 遍历选中的文件，添加到列表（仅前端展示，实际需上传到服务器）
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    const fileSize = (file.size / 1024 / 1024).toFixed(1) + 'MB'; // 转换为MB
+                    let fileIcon = 'fa-file-alt'; // 默认图标
+                    let iconColor = 'txt'; // 默认颜色类
+
+                    // 根据文件类型设置图标
+                    if (file.type.includes('word') || file.name
