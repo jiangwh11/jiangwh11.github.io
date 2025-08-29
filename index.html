@@ -6,7 +6,6 @@
     <title>暑假学习资料 - L4专区</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 保持与之前相同的样式 */
         * {
             margin: 0;
             padding: 0;
@@ -29,7 +28,7 @@
         
         /* 主目录页面样式 */
         .home-page {
-            display: block;
+            display: block; /* 初始显示主页面 */
         }
         
         .home-header {
@@ -48,7 +47,7 @@
             font-size: 1.1rem;
         }
         
-        /* 文件夹卡片 */
+        /* 文件夹卡片（核心入口） */
         .folder-wrapper {
             display: flex;
             justify-content: center;
@@ -73,7 +72,7 @@
         
         .folder-icon {
             font-size: 6rem;
-            color: #ffc107;
+            color: #ffc107; /* 文件夹经典黄色 */
             margin-bottom: 25px;
         }
         
@@ -91,7 +90,7 @@
         
         /* 文件列表页面样式 */
         .file-page {
-            display: none;
+            display: none; /* 默认隐藏，点击文件夹后显示 */
         }
         
         .file-header {
@@ -148,25 +147,56 @@
             background-color: #1e42a3;
         }
         
+        .upload-btn:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        
         #file-input {
-            display: none;
+            display: none; /* 隐藏原生文件选择框 */
         }
         
         /* 上传进度条 */
-        .upload-progress {
-            height: 6px;
-            background-color: #eee;
-            border-radius: 3px;
-            margin: 10px 0;
+        .progress-container {
             display: none;
+            margin-bottom: 25px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
         }
         
         .progress-bar {
-            height: 100%;
+            height: 8px;
             background-color: #28a745;
-            border-radius: 3px;
             width: 0%;
             transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: right;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* 消息提示 */
+        .message {
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
         }
         
         /* 文件列表容器 */
@@ -180,7 +210,7 @@
         
         .file-list-header {
             display: grid;
-            grid-template-columns: 4fr 1fr 2fr;
+            grid-template-columns: 4fr 1fr 2fr; /* 文件名、大小、操作 */
             padding: 18px 25px;
             background-color: #f8f9fa;
             border-bottom: 1px solid #eee;
@@ -210,16 +240,17 @@
             align-items: center;
         }
         
+        /* 不同文件类型的图标样式 */
         .file-type {
             font-size: 1.8rem;
             margin-right: 16px;
         }
         
-        .type-word { color: #2b579a; }
-        .type-pdf { color: #d32f2f; }
-        .type-excel { color: #217346; }
-        .type-image { color: #f57c00; }
-        .type-txt { color: #666; }
+        .type-word { color: #2b579a; }    /* Word图标色 */
+        .type-pdf { color: #d32f2f; }     /* PDF图标色 */
+        .type-excel { color: #217346; }   /* Excel图标色 */
+        .type-image { color: #f57c00; }   /* 图片图标色 */
+        .type-txt { color: #666; }        /* 文本图标色 */
         
         .file-name {
             font-size: 1.1rem;
@@ -294,6 +325,31 @@
             color: #dee2e6;
         }
         
+        .empty-state h3 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state p {
+            font-size: 1rem;
+        }
+        
+        /* 加载状态 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
         /* 确认删除弹窗 */
         .modal {
             display: none;
@@ -339,6 +395,7 @@
             border-radius: 5px;
             font-size: 0.95rem;
             cursor: pointer;
+            transition: background 0.2s ease;
         }
         
         .cancel-btn {
@@ -347,31 +404,21 @@
             border: none;
         }
         
+        .cancel-btn:hover {
+            background-color: #5a6268;
+        }
+        
         .confirm-btn {
             background-color: #dc3545;
             color: white;
             border: none;
         }
         
-        /* 提示消息 */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 20px;
-            background-color: #333;
-            color: white;
-            border-radius: 5px;
-            z-index: 1001;
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        .confirm-btn:hover {
+            background-color: #bb2d3b;
         }
         
-        .toast.show {
-            opacity: 1;
-        }
-        
+        /* 页脚 */
         footer {
             text-align: center;
             color: #666;
@@ -381,32 +428,62 @@
             margin-top: 30px;
         }
         
+        /* 响应式适配（手机端） */
         @media (max-width: 768px) {
             .folder-card {
                 width: 300px;
                 padding: 30px 20px;
             }
             
-            .file-list-header, .file-item {
+            .folder-icon {
+                font-size: 5rem;
+            }
+            
+            .file-list-header {
                 grid-template-columns: 2fr 1fr 2fr;
+                padding: 15px 18px;
+                font-size: 0.9rem;
+            }
+            
+            .file-item {
+                grid-template-columns: 2fr 1fr 2fr;
+                padding: 15px 18px;
+            }
+            
+            .file-type {
+                font-size: 1.5rem;
+                margin-right: 12px;
+            }
+            
+            .file-name {
+                font-size: 0.95rem;
+            }
+            
+            .file-size {
+                font-size: 0.85rem;
             }
             
             .download-btn, .delete-btn {
                 padding: 6px 10px;
                 font-size: 0.8rem;
             }
+            
+            .file-actions {
+                gap: 5px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- 1. 主目录页面 -->
+        <!-- 1. 主目录页面（初始显示） -->
         <div class="home-page" id="home-page">
             <div class="home-header">
                 <h1>L4暑假学习资料中心</h1>
                 <p>点击文件夹进入查看/下载资料</p>
             </div>
             
+            <!-- 「L4暑假内容」文件夹（点击进入文件列表） -->
             <div class="folder-wrapper">
                 <div class="folder-card" id="enter-folder">
                     <i class="fas fa-folder folder-icon"></i>
@@ -420,7 +497,7 @@
             </footer>
         </div>
 
-        <!-- 2. 文件列表页面 -->
+        <!-- 2. 文件列表页面（点击文件夹后显示） -->
         <div class="file-page" id="file-page">
             <div class="file-header">
                 <div class="back-btn" id="back-home">
@@ -430,16 +507,22 @@
                 <h2 class="file-title">L4暑假内容</h2>
             </div>
             
-            <!-- 上传文件区域 -->
+            <!-- 消息提示区 -->
+            <div class="message" id="message"></div>
+            
+            <!-- 上传进度 -->
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+                <div class="progress-text" id="progress-text">0% 已上传</div>
+            </div>
+            
+            <!-- 上传文件区域（点击按钮选择文件） -->
             <div class="upload-area">
-                <label for="file-input" class="upload-btn">
+                <label for="file-input" class="upload-btn" id="upload-btn">
                     <i class="fas fa-upload"></i>
                     上传文件
                 </label>
                 <input type="file" id="file-input" multiple accept=".doc,.docx,.pdf,.xlsx,.xls,.png,.jpg,.jpeg,.txt">
-                <div class="upload-progress">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
             </div>
             
             <!-- 文件列表容器 -->
@@ -450,8 +533,15 @@
                     <div>操作</div>
                 </div>
                 
+                <!-- 已存在的文件列表 -->
                 <ul class="file-list" id="file-list">
-                    <!-- 文件会通过JavaScript动态加载 -->
+                    <!-- 加载状态 -->
+                    <li class="file-item">
+                        <div class="file-info" style="justify-content: center; grid-column: 1 / -1;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #666;"></i>
+                            <span style="margin-left: 10px; color: #666;">加载文件中...</span>
+                        </div>
+                    </li>
                 </ul>
             </div>
             
@@ -473,234 +563,294 @@
         </div>
     </div>
 
-    <!-- 提示消息 -->
-    <div class="toast" id="toast"></div>
-
     <script>
-        // 配置 - 替换为您的后端服务URL
-        const API_URL = 'http://localhost:3000'; // 本地测试
-        // const API_URL = 'https://您的服务器域名'; // 线上部署
+        // 配置API地址 - 根据实际部署情况修改
+        const API_URL = ''; // 空字符串表示相对路径，与当前页面同域名
         
-        // DOM元素
+        // 获取DOM元素
         const enterFolderBtn = document.getElementById('enter-folder');
         const homePage = document.getElementById('home-page');
         const filePage = document.getElementById('file-page');
         const backHomeBtn = document.getElementById('back-home');
         const fileInput = document.getElementById('file-input');
         const fileList = document.getElementById('file-list');
+        const uploadBtn = document.getElementById('upload-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const messageElement = document.getElementById('message');
         const deleteModal = document.getElementById('delete-modal');
         const deleteFilename = document.getElementById('delete-filename');
         const cancelDelete = document.getElementById('cancel-delete');
         const confirmDelete = document.getElementById('confirm-delete');
-        const progressBar = document.getElementById('progress-bar');
-        const uploadProgress = document.querySelector('.upload-progress');
-        const toast = document.getElementById('toast');
         
+        // 存储当前要删除的文件ID
         let currentFileId = null;
-        let currentFileItem = null;
         
-        // 页面切换
-        enterFolderBtn.addEventListener('click', () => {
-            homePage.style.display = 'none';
-            filePage.style.display = 'block';
-            loadFiles(); // 加载文件列表
+        // 页面加载时获取文件列表
+        document.addEventListener('DOMContentLoaded', () => {
+            // 进入文件页面时加载文件列表
+            enterFolderBtn.addEventListener('click', () => {
+                homePage.style.display = 'none';
+                filePage.style.display = 'block';
+                fetchFiles(); // 加载文件列表
+            });
+            
+            // 返回主目录
+            backHomeBtn.addEventListener('click', () => {
+                filePage.style.display = 'none';
+                homePage.style.display = 'block';
+            });
+            
+            // 上传文件处理
+            fileInput.addEventListener('change', handleFileUpload);
+            uploadBtn.addEventListener('click', () => fileInput.click());
+            
+            // 删除相关事件
+            cancelDelete.addEventListener('click', () => {
+                deleteModal.style.display = 'none';
+                currentFileId = null;
+            });
+            
+            confirmDelete.addEventListener('click', () => {
+                if (currentFileId) {
+                    deleteFile(currentFileId);
+                }
+            });
+            
+            // 点击弹窗外部关闭弹窗
+            deleteModal.addEventListener('click', (e) => {
+                if (e.target === deleteModal) {
+                    deleteModal.style.display = 'none';
+                    currentFileId = null;
+                }
+            });
         });
         
-        backHomeBtn.addEventListener('click', () => {
-            filePage.style.display = 'none';
-            homePage.style.display = 'block';
-        });
-        
-        // 加载文件列表
-        async function loadFiles() {
+        // 获取文件列表
+        async function fetchFiles() {
             try {
                 const response = await fetch(`${API_URL}/files`);
-                const files = await response.json();
                 
-                fileList.innerHTML = '';
-                
-                if (files.length === 0) {
-                    fileList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-folder-open"></i>
-                            <h3>当前文件夹暂无文件</h3>
-                            <p>点击"上传文件"添加L4暑假相关学习资料</p>
-                        </div>
-                    `;
-                    return;
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
                 }
                 
-                // 渲染文件列表
-                files.forEach(file => {
-                    const fileExt = file.name.split('.').pop().toLowerCase();
-                    let iconClass = 'fa-file-alt';
-                    let typeClass = 'type-txt';
-                    
-                    switch(fileExt) {
-                        case 'doc': case 'docx':
-                            iconClass = 'fa-file-word';
-                            typeClass = 'type-word';
-                            break;
-                        case 'pdf':
-                            iconClass = 'fa-file-pdf';
-                            typeClass = 'type-pdf';
-                            break;
-                        case 'xls': case 'xlsx':
-                            iconClass = 'fa-file-excel';
-                            typeClass = 'type-excel';
-                            break;
-                        case 'jpg': case 'jpeg': case 'png':
-                            iconClass = 'fa-file-image';
-                            typeClass = 'type-image';
-                            break;
-                    }
-                    
-                    const fileSize = (file.size / 1024 / 1024).toFixed(1) + 'MB';
-                    
-                    const fileItem = document.createElement('li');
-                    fileItem.className = 'file-item';
-                    fileItem.innerHTML = `
-                        <div class="file-info">
-                            <i class="fas ${iconClass} file-type ${typeClass}"></i>
-                            <div class="file-name">${file.name}</div>
-                        </div>
-                        <div class="file-size">${fileSize}</div>
-                        <div class="file-actions">
-                            <a href="${API_URL}/download/${file.id}" class="download-btn" download>
-                                <i class="fas fa-download"></i>
-                                下载
-                            </a>
-                            <button class="delete-btn" data-id="${file.id}" data-name="${file.name}">
-                                <i class="fas fa-trash"></i>
-                                删除
-                            </button>
-                        </div>
-                    `;
-                    
-                    fileList.appendChild(fileItem);
-                });
-                
-                // 绑定删除事件
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', handleDeleteClick);
-                });
-                
+                const files = await response.json();
+                renderFileList(files);
             } catch (error) {
-                showToast('加载文件失败，请稍后重试');
-                console.error('加载文件失败:', error);
+                showMessage(`加载文件失败: ${error.message}`, 'error');
+                fileList.innerHTML = `
+                    <li class="file-item">
+                        <div class="file-info" style="justify-content: center; grid-column: 1 / -1;">
+                            <i class="fas fa-exclamation-triangle" style="color: #dc3545;"></i>
+                            <span style="margin-left: 10px; color: #dc3545;">无法加载文件列表</span>
+                        </div>
+                    </li>
+                `;
             }
         }
         
+        // 渲染文件列表
+        function renderFileList(files) {
+            if (files.length === 0) {
+                fileList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-folder-open"></i>
+                        <h3>当前文件夹暂无文件</h3>
+                        <p>点击"上传文件"添加L4暑假相关学习资料</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            fileList.innerHTML = '';
+            
+            files.forEach(file => {
+                // 转换文件大小为MB
+                const fileSize = (file.size / 1024 / 1024).toFixed(1) + 'MB';
+                // 获取文件扩展名
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                // 确定文件图标
+                let iconClass = 'fa-file-alt';
+                let typeClass = 'type-txt';
+                
+                switch(ext) {
+                    case 'doc':
+                    case 'docx':
+                        iconClass = 'fa-file-word';
+                        typeClass = 'type-word';
+                        break;
+                    case 'pdf':
+                        iconClass = 'fa-file-pdf';
+                        typeClass = 'type-pdf';
+                        break;
+                    case 'xls':
+                    case 'xlsx':
+                        iconClass = 'fa-file-excel';
+                        typeClass = 'type-excel';
+                        break;
+                    case 'jpg':
+                    case 'jpeg':
+                    case 'png':
+                        iconClass = 'fa-file-image';
+                        typeClass = 'type-image';
+                        break;
+                }
+                
+                // 创建文件项
+                const fileItem = document.createElement('li');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <div class="file-info">
+                        <i class="fas ${iconClass} file-type ${typeClass}"></i>
+                        <div class="file-name">${file.name}</div>
+                    </div>
+                    <div class="file-size">${fileSize}</div>
+                    <div class="file-actions">
+                        <a href="${API_URL}/download/${file.id}" class="download-btn" download>
+                            <i class="fas fa-download"></i>
+                            下载
+                        </a>
+                        <button class="delete-btn" data-id="${file.id}" data-name="${file.name}">
+                            <i class="fas fa-trash"></i>
+                            删除
+                        </button>
+                    </div>
+                `;
+                
+                fileList.appendChild(fileItem);
+            });
+            
+            // 为所有删除按钮绑定事件
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentFileId = e.currentTarget.getAttribute('data-id');
+                    deleteFilename.textContent = e.currentTarget.getAttribute('data-name');
+                    deleteModal.style.display = 'flex';
+                });
+            });
+        }
+        
         // 处理文件上传
-        fileInput.addEventListener('change', async function(e) {
+        async function handleFileUpload(e) {
             const files = e.target.files;
-            if (files.length === 0) return;
+            if (!files || files.length === 0) return;
+            
+            // 显示进度条
+            progressContainer.style.display = 'block';
+            progressBar.style.width = '0%';
+            progressText.textContent = '0% 已上传';
+            uploadBtn.disabled = true;
+            uploadBtn.innerHTML = '<div class="loading"></div> 上传中...';
+            hideMessage();
             
             const formData = new FormData();
+            // 添加所有选中的文件
             for (let i = 0; i < files.length; i++) {
                 formData.append('files', files[i]);
             }
             
             try {
-                uploadProgress.style.display = 'block';
-                progressBar.style.width = '0%';
-                
                 const response = await fetch(`${API_URL}/upload`, {
                     method: 'POST',
                     body: formData,
-                    onUploadProgress: (progressEvent) => {
-                        const percent = (progressEvent.loaded / progressEvent.total) * 100;
-                        progressBar.style.width = `${percent}%`;
-                    }
+                    // 不设置Content-Type，让浏览器自动处理
                 });
                 
-                if (response.ok) {
-                    showToast('文件上传成功');
-                    loadFiles(); // 重新加载文件列表
-                } else {
-                    showToast('文件上传失败');
+                // 处理上传进度（仅现代浏览器支持）
+                if (response.body) {
+                    const reader = response.body.getReader();
+                    const contentLength = +response.headers.get('Content-Length');
+                    let receivedLength = 0;
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        receivedLength += value.length;
+                        const progress = Math.round((receivedLength / contentLength) * 100);
+                        updateProgress(progress);
+                    }
                 }
                 
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `上传失败: HTTP状态码 ${response.status}`);
+                }
+                
+                // 上传成功，刷新文件列表
+                const result = await response.json();
+                showMessage(`成功上传 ${result.count} 个文件`, 'success');
+                fetchFiles();
             } catch (error) {
-                showToast('上传出错，请稍后重试');
-                console.error('上传失败:', error);
+                showMessage(error.message, 'error');
             } finally {
-                // 重置上传控件和进度条
+                // 重置上传状态
+                resetUploadUI();
+                // 清空文件输入，允许重复选择同一文件
                 fileInput.value = '';
-                setTimeout(() => {
-                    uploadProgress.style.display = 'none';
-                    progressBar.style.width = '0%';
-                }, 1000);
             }
-        });
-        
-        // 处理删除
-        function handleDeleteClick(e) {
-            currentFileId = e.currentTarget.getAttribute('data-id');
-            currentFileItem = e.currentTarget.closest('.file-item');
-            deleteFilename.textContent = e.currentTarget.getAttribute('data-name');
-            deleteModal.style.display = 'flex';
         }
         
-        cancelDelete.addEventListener('click', () => {
-            deleteModal.style.display = 'none';
-            currentFileId = null;
-            currentFileItem = null;
-        });
+        // 更新上传进度
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}% 已上传`;
+        }
         
-        confirmDelete.addEventListener('click', async () => {
-            if (!currentFileId) return;
-            
+        // 重置上传UI
+        function resetUploadUI() {
+            uploadBtn.disabled = false;
+            uploadBtn.innerHTML = '<i class="fas fa-upload"></i> 上传文件';
+            // 3秒后隐藏进度条
+            setTimeout(() => {
+                progressContainer.style.display = 'none';
+                progressBar.style.width = '0%';
+            }, 3000);
+        }
+        
+        // 删除文件
+        async function deleteFile(fileId) {
             try {
-                const response = await fetch(`${API_URL}/delete/${currentFileId}`, {
+                const response = await fetch(`${API_URL}/delete/${fileId}`, {
                     method: 'DELETE'
                 });
                 
-                if (response.ok) {
-                    showToast('文件已删除');
-                    currentFileItem.remove();
-                    
-                    // 检查列表是否为空
-                    if (fileList.children.length === 0) {
-                        fileList.innerHTML = `
-                            <div class="empty-state">
-                                <i class="fas fa-folder-open"></i>
-                                <h3>当前文件夹暂无文件</h3>
-                                <p>点击"上传文件"添加L4暑假相关学习资料</p>
-                            </div>
-                        `;
-                    }
-                } else {
-                    showToast('删除失败，请稍后重试');
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `删除失败: HTTP状态码 ${response.status}`);
                 }
                 
+                // 关闭弹窗
+                deleteModal.style.display = 'none';
+                // 显示成功消息
+                showMessage('文件已成功删除', 'success');
+                // 刷新文件列表
+                fetchFiles();
             } catch (error) {
-                showToast('删除出错');
-                console.error('删除失败:', error);
+                showMessage(error.message, 'error');
             } finally {
-                deleteModal.style.display = 'none';
                 currentFileId = null;
-                currentFileItem = null;
             }
-        });
+        }
         
-        // 点击弹窗外部关闭
-        deleteModal.addEventListener('click', (e) => {
-            if (e.target === deleteModal) {
-                deleteModal.style.display = 'none';
-            }
-        });
-        
-        // 显示提示消息
-        function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add('show');
+        // 显示消息
+        function showMessage(text, type = 'info') {
+            messageElement.textContent = text;
+            messageElement.className = 'message';
+            messageElement.classList.add(type);
             
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
+            // 5秒后自动隐藏
+            setTimeout(hideMessage, 5000);
+        }
+        
+        // 隐藏消息
+        function hideMessage() {
+            messageElement.textContent = '';
+            messageElement.className = 'message';
         }
     </script>
 </body>
 </html>
-    
